@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do list</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body{
+            background-color: rgb(255, 208, 137);
+            font-family: cursive;
+            font-size: 1.05em;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Css for Tasks marked as DONE / Completed */
+        .done_css.done_css{
+            text-decoration: line-through;
+            background-color: rgb(255, 208, 137);
+            color: rgb(248, 189, 101);
+            border: 2px solid rgb(248, 187, 97);
+            /* display: none;       display cannot be animated... so cannot do tranisition for this */
+        }
+
+        h1 {
+            /* margin auto didnt work on h3 .. find out why */
+            text-align: center;
+            text-decoration: underline;
+        }
+
+        /* css for the div box which contains UL */
+        .listbox {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+
+            #list {
+                /* ul */
+                width: 90%;
+                padding-right: 40px;
+            }
+
+            li{
+                display: flex;
+
+                /* so the child elements of Li - input text | buttons ... these two will have space between them, and thus both will be on the extreme ends of width of li*/
+                justify-content: space-between;
+                align-items: center;
+
+                padding: 10px;
+                border: 3px solid #53442e;
+                border-radius: 30px;
+                padding-right: 30px;
+                padding-left: 30px;
+
+                background-color:saddlebrown;
+                color: white;
+                list-style: none;
+
+                /* gets used in .done_css */
+                transition: all 1s ease;
+            }
+        }
+
+        /* do : input field     |  btn : add button (only that button, none else) */
+        #do, #btn{
+            padding: 10px;
+            border: 2px solid rgb(199, 143, 59);
+            border-radius: 30px ;
+            font-size: 18px;
+        }
+        #btn#btn{
+            border-radius: 10px;
+        }
+
+        /* all buttons    -   add, delete, edit, done, confirm edit */
+        .buttons{
+            border: 2px solid transparent;
+            padding: 10px;
+            background-color: rgb(162, 91, 41);
+            border-radius: 20px;
+            cursor: grab;
+        }
+
+        /* the group of buttons inside the individual li's   (delete, edit, done) */
+        .btnbox{
+            border: 2px solid transparent;
+            border-radius: 30px;
+        }
+
+        
+
+    </style>
+
+</head>
+
+<body>
+    <form action="">
+        <input type="text" name="user_input" id="do" placeholder="Enter Tasks to do">
+        <button type="button" id="btn" class="buttons" onclick="add()"><i class="fa fa-plus"></i></button>
+    </form>
+
+    <h1>To Do List</h1>
+    <div class="listbox">
+        <ul id="list">
+
+            <!-- One example of Individual list -->
+            <!-- <li> Drink Water
+                <div class="btnbox">
+                    <button type="button" id="del" class="delete buttons" onclick="del(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button type="button" id="edit" class="edit buttons" onclick="edit(this)">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button type="button" id="done" class="done buttons" onclick="done(this)">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </div>
+            </li> -->
+
+
+            <!-- Individual lists (made from user input with buttons for delete, edit, mark_as_done) will come here dynamically-->
+
+
+        </ul>   <!-- List ends here -->
+    </div>    <!--List Box ends here-->
+
+
+
+    <script>
+        // function to add tasks to the list
+        function add() {
+            var list = document.getElementById('list');
+            var user_input = document.getElementById('do');
+            var pattern = /^[a-zA-z0-9 ]{1,10}$/;
+
+            if (user_input.value.trim() != '') {
+                list.innerHTML +=       // a way of adding into the elements (instead of using = , which replaces the list each time)
+                `<li> ${user_input.value}
+                <div class="btnbox">
+                    <button type="button" id="del" class="delete buttons" onclick="del(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button type="button" id="edit" class="edit buttons" onclick="edit(this)">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button type="button" id="done" class="done buttons" onclick="done(this)">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </div>
+                </li>`;
+            }
+            else {
+                alert("Tasks cannot be empty");
+            }
+            user_input.value = '';   // to reset the input field
+        }
+
+
+        // function to delete a task
+        function del(element) {
+            // var child1 = document.getElementsByClassName('delete');     cant do this ... need to pass only that element which is clicked
+            var parent1 = element.parentNode.parentNode;     // gets the parent of the element (here : li)
+            parent1.style.display = "none";
+            // can use .value on parentNode as .value can only used on form elements
+            // so for getting value, you should do .innerTEXT
+            // alert(parent1.innerText);
+        }
+
+        
+        // function to edit a task
+        function edit(element) {
+            var parent1 = element.parentNode.parentNode;
+
+            parent1.innerHTML =
+            `<input type="text" name="user_input_edit" id="do1" value="${parent1.innerText}" style="padding:10px; border-radius:20px" autofocus>
+            <button type="button" class="btn btn_edit buttons" onclick="confirm_edit(this)">
+                    <i class="fa fa-check">ok
+            </button>`;    // this innerHTML comes for taking input and gets replaced again by conf_edit innerHTML
+
+            // document.getElementsById('do1').value.focus();
+        }
+
+
+        // function to confirm and apply the edits to the tasks
+        function confirm_edit(element) {
+            var parent1 = element.parentNode; // li element
+
+            user_edit = document.getElementById('do1');
+            if (user_edit.value.trim() != '') {
+                parent1.innerHTML =
+                `${user_edit.value}
+                <div class="btnbox">
+                    <button type="button" id="del" class="delete buttons" onclick="del(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button type="button" id="edit" class="edit buttons" onclick="edit(this)">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button type="button" id="done" class="done buttons" onclick="done(this)">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </div>`;
+                return true;
+            }
+            else{
+                alert("Tasks cannot be empty");
+            }
+        }
+        
+
+
+        // function to show that the task is done
+        function done(element){
+            // all element inside an Li made translucent to show that the task has been done
+            var parent1 = element.parentNode.parentNode;
+            parent1.classList.add('done_css');
+            element.parentNode.classList.add('done_css');
+            element.classList.add('done_css');
+            element.previousElementSibling.classList.add('done_css');
+            element.previousElementSibling.previousElementSibling.classList.add('done_css');
+        }
+    </script>
+</body>
+
+</html>     

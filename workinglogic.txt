@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do list</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        li {
+            list-style: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <form action="">
+        <label for="do">Add Task</label> <br>
+        <input type="text" name="user_input" id="do">
+        <button type="button" id="btn" onclick="add()"><i class="fa fa-plus"></i></button>
+    </form>
+
+    <div class="listbox">
+        <ul id="list">
+            <h3>Tasks</h3>
+
+            <li> Drink Water
+                <button type="button" id="del" class="delete" onclick="del(this)">
+                    <i class="fa fa-trash"></i>
+                </button>
+                <button type="button" id="edit" class="edit" onclick="edit(this)">
+                    <i class="fa fa-edit"></i>
+                </button>
+            </li>
+
+        </ul>
+    </div>
+
+    <script>
+        function add() {
+            var list = document.getElementById('list');
+            var user_input = document.getElementById('do');
+            var pattern = /^[a-zA-z0-9 ]{1,10}$/;
+
+            if (user_input.value.trim() != '') {
+                list.innerHTML +=       // a way of adding into the elements (instead of using = , which replaces the list each time)
+                    `<li> ${user_input.value}
+                    <button type="button" id="del" class="delete" onclick="del(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button type="button" id="edit" class="edit" onclick="edit(this)">
+                    <i class="fa fa-edit"></i>
+                </button>
+                </li>`;
+            }
+            else {
+                alert("Tasks cannot be empty");
+            }
+            user_input.value = '';   // to reset the input field
+        }
+
+        function del(element) {
+            // var child1 = document.getElementsByClassName('delete');     cant do this ... need to pass only that element which is clicked
+            var parent1 = element.parentNode;     // gets the parent of the element (here : li)
+            parent1.style.display = "none";
+            // can use .value on parentNode as .value can only used on form elements
+            // so for getting value, you should do .innerTEXT
+            // alert(parent1.innerText);
+        }
+
+        function edit(element) {
+            var parent1 = element.parentNode;
+
+            parent1.innerHTML =
+                `<input type="text" name="user_input_edit" id="do1" autofill="${parent1.innerText}">
+            <button type="button" class="btn btn_edit" onclick="confirm_edit(this)">
+            <i class="fa fa-check">
+            </button>`;
+        }
+
+        function confirm_edit(element) {
+            var parent1 = element.parentNode;
+            user_edit = document.getElementById('do1');
+            if (user_edit.value.trim() != '') {
+                parent1.innerHTML =
+                    `<li> ${user_edit.value}
+                    <button type="button" id="del" class="delete" onclick="del(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                    <button type="button" id="edit" class="edit" onclick="edit(this)">
+                    <i class="fa fa-edit"></i>
+                    </button>
+                </li>`;
+                return true;
+            }
+        }
+    </script>
+</body>
+
+</html>
