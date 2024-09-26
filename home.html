@@ -98,7 +98,6 @@
         }
 
         
-
     </style>
 
 </head>
@@ -170,9 +169,9 @@
         // function to delete a task
         function del(element) {
             // var child1 = document.getElementsByClassName('delete');     cant do this ... need to pass only that element which is clicked
-            var parent1 = element.parentNode.parentNode;     // gets the parent of the element (here : li)
+            var parent1 = element.parentNode.parentNode;     // gets the parent of the element (here parent is : li)
             parent1.style.display = "none";
-            // can use .value on parentNode as .value can only used on form elements
+            // cant use .value on parentNode as .value can only used on form elements
             // so for getting value, you should do .innerTEXT
             // alert(parent1.innerText);
         }
@@ -181,7 +180,6 @@
         // function to edit a task
         function edit(element) {
             var parent1 = element.parentNode.parentNode;
-
             parent1.innerHTML =
             `<input type="text" name="user_input_edit" id="do1" value="${parent1.innerText}" style="padding:10px; border-radius:20px" autofocus>
             <button type="button" class="btn btn_edit buttons" onclick="confirm_edit(this)">
